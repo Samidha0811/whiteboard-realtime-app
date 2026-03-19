@@ -13,7 +13,7 @@ A multiplayer drawing and guessing game like Skribbl.io.
 - Backend: Spring Boot
 - WebSocket for real-time communication
 
-## ▶️ How to Run
+## ▶️ How to Run the code
 
 ### Backend
 cd backend
