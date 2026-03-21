@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import InputFields from '../../components/InputFields/InputFields';
 import Button from '../../components/Button/Button';
 import HomeScreenContainer from '../../components/HomeScreenContainer/HomeScreenContainer';
 import './Login.css';
 
 const Login = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -20,7 +22,10 @@ const Login = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log('Login submitted:', formData);
+        // Navigate to the room page
+        navigate('/room');
     };
+
 
     return (
         <HomeScreenContainer>

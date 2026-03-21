@@ -1,3 +1,25 @@
 .score-board-container {
-    /* Add styles for ScoreBoard here */
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--text-primary);
+}
+
+.sc-label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--accent-primary);
+    letter-spacing: 0.05em;
+}
+
+.sc-players {
+    display: flex;
+    gap: 1rem;
+}
+
+.sc-player-placeholder {
+    font-size: 0.85rem;
+    opacity: 0.6;
+    font-style: italic;
 }

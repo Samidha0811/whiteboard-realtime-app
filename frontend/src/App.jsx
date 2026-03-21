@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './page/Login/Login';
 import Home from './page/Home/Home';
+import JoinRoom from './page/JoinRoom/JoinRoom';
 import Button from './components/Button/Button';
 import './App.css';
 
@@ -30,6 +31,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/room" element={<JoinRoom />} />
         </Routes>
       </div>
     </Router>
