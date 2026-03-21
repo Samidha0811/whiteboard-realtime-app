@@ -1,13 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useGame } from '../../context/GameContext';
+import { connectSocket, sendMessage, subscribe } from '../../services/socket';
 import GameLayout from '../../components/Layout/GameLayout/GameLayout';
+import CanvasBoard from '../../components/CanvasBoard/CanvasBoard';
 import './GamePage.css';
 
 const GamePage = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { gameData, updateGameData } = useGame();
+    const [players, setPlayers] = useState([]);
+    const [messages, setMessages] = useState([]);
+    const [connectionStatus, setConnectionStatus] = useState('connecting');
 
     useEffect(() => {
         // Retrieve and validate data from navigation state
@@ -17,11 +22,32 @@ const GamePage = () => {
             // Fallback: If no state is present (e.g., direct URL access), redirect to room entry
             console.warn("No active session found. Redirecting to room entry.");
             navigate('/room');
-        } else {
-            // Sync context with navigation state
-            updateGameData({ username, roomId, isHost: !!isHost });
+            return;
         }
-    }, [location.state, updateGameData, navigate]);
+
+        // Sync context
+        updateGameData({ username, roomId, isHost: !!isHost });
+
+        // Connect to WebSocket
+        connectSocket(() => {
+            setConnectionStatus('connected');
+
+            // 🟢 Send Join Message
+            sendMessage('/app/join', { username, roomId });
+
+            // 👂 Subscribe to Players List updates
+            subscribe(`/topic/players/${roomId}`, (playerList) => {
+                setPlayers(playerList);
+            });
+
+            // 💬 Subscribe to Chat
+            subscribe(`/topic/chat/${roomId}`, (msg) => {
+                setMessages(prev => [...prev, msg]);
+            });
+        });
+
+    }, [location.state, navigate, updateGameData]);
+
 
 
     // Ensure we have data before rendering
@@ -33,13 +59,15 @@ const GamePage = () => {
         <GameLayout
             left={
                 <div className="sidebar-content">
-                    <div className="user-profile-summary">
-                        <div className="avatar-placeholder">
-                            {gameData.username.charAt(0).toUpperCase()}
+                    <div className="user-profile">
+                        <div className="user-avatar">
+                            {gameData.username ? gameData.username.charAt(0).toUpperCase() : '?'}
                         </div>
                         <div className="user-info">
                             <span className="user-name">{gameData.username}</span>
-                            <span className="user-status">Online</span>
+                            <span className={`user-status ${connectionStatus}`}>
+                                {connectionStatus === 'connecting' ? 'Connecting...' : 'Online'}
+                            </span>
                         </div>
                     </div>
 
@@ -57,20 +85,59 @@ const GamePage = () => {
                     <div className="sidebar-divider" />
 
                     <h2>Players</h2>
-                    <p>No other players yet...</p>
+                    <div className="players-list">
+                        {players.length > 0 ? (
+                            players.map((player, index) => (
+                                <div key={index} className="player-badge">
+                                    <span className="player-initial">{player.username.charAt(0)}</span>
+                                    <span className="player-name">{player.username}</span>
+                                </div>
+                            ))
+                        ) : (
+                            <p>No other players yet...</p>
+                        )}
+                    </div>
                 </div>
             }
             center={
-                <div className="main-canvas-area">
-                    {/* Canvas content is handled by the Center component */}
+                <div className="game-center-container">
+                    {connectionStatus === 'connected' ? (
+                        <CanvasBoard roomId={gameData.roomId} />
+                    ) : (
+                        <div className="canvas-loading">
+                            <p>Connecting to whiteboard...</p>
+                        </div>
+                    )}
                 </div>
             }
             right={
                 <div className="sidebar-content">
                     <h2>Chat</h2>
-                    <div className="chat-messages">
-                        <div className="system-msg">Welcome, {gameData.username}!</div>
-                        <div className="system-msg">Joined room {gameData.roomId}</div>
+                    <div className="chat-container">
+                        <div className="chat-messages">
+                            {messages.map((msg, index) => (
+                                <div key={index} className={`message ${msg.sender === 'System' ? 'system-msg' : ''}`}>
+                                    <strong>{msg.sender}: </strong>
+                                    <span>{msg.message}</span>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="chat-input-area">
+                            <input
+                                type="text"
+                                placeholder="Type a message..."
+                                onKeyPress={(e) => {
+                                    if (e.key === 'Enter' && e.target.value.trim()) {
+                                        sendMessage('/app/chat', {
+                                            sender: gameData.username,
+                                            message: e.target.value,
+                                            roomId: gameData.roomId
+                                        });
+                                        e.target.value = '';
+                                    }
+                                }}
+                            />
+                        </div>
                     </div>
                 </div>
             }

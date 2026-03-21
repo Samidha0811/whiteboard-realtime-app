@@ -1,14 +1,15 @@
 import React, { useRef, useState, useEffect } from "react";
+import { sendMessage, subscribe } from "../../services/socket";
 import "./CanvasBoard.css";
 
-const CanvasBoard = () => {
+const CanvasBoard = ({ roomId }) => {
     const canvasRef = useRef(null);
     const containerRef = useRef(null);
     const [isDrawing, setIsDrawing] = useState(false);
     const [color, setColor] = useState("#000000");
     const [size, setSize] = useState(5);
 
-    // Dynamic sizing logic
+    // 📐 Dynamic Sizing Logic
     useEffect(() => {
         const updateSize = () => {
             if (containerRef.current && canvasRef.current) {
@@ -23,32 +24,56 @@ const CanvasBoard = () => {
         return () => window.removeEventListener('resize', updateSize);
     }, []);
 
-    const startDrawing = (e) => {
+    // 👂 Subscribe to other players' drawing dots
+    useEffect(() => {
+        if (roomId) {
+            const subscription = subscribe(`/topic/draw/${roomId}`, (data) => {
+                drawOnCanvas(data.x, data.y, data.type, false); 
+            });
+            return () => subscription && subscription.unsubscribe();
+        }
+    }, [roomId]);
+
+    const drawOnCanvas = (x, y, type, shouldBroadcast) => {
         const ctx = canvasRef.current.getContext("2d");
-        ctx.beginPath();
-        ctx.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
-        setIsDrawing(true);
-    };
-
-    const stopDrawing = () => {
-        const ctx = canvasRef.current.getContext("2d");
-        ctx.beginPath(); // Important fix: prevents unwanted lines from connecting
-        setIsDrawing(false);
-    };
-
-    const draw = (e) => {
-        if (!isDrawing) return;
-
-        const ctx = canvasRef.current.getContext("2d");
-
+        
         ctx.lineWidth = size;
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
         ctx.strokeStyle = color; 
 
-        ctx.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
-        ctx.stroke();
+        if (type === 'start') {
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        } else {
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        }
+
+        if (shouldBroadcast) {
+            sendMessage("/app/draw", { x, y, type, roomId });
+        }
     };
+
+    const startDrawing = (e) => {
+        const x = e.nativeEvent.offsetX;
+        const y = e.nativeEvent.offsetY;
+        drawOnCanvas(x, y, 'start', true);
+        setIsDrawing(true);
+    };
+
+    const stopDrawing = () => {
+        setIsDrawing(false);
+    };
+
+    const draw = (e) => {
+        if (!isDrawing) return;
+        const x = e.nativeEvent.offsetX;
+        const y = e.nativeEvent.offsetY;
+        drawOnCanvas(x, y, 'draw', true);
+    };
+
+
 
     const clearCanvas = () => {
         const ctx = canvasRef.current.getContext("2d");

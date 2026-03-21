@@ -16,21 +16,28 @@ export const GameProvider = ({ children }) => {
         sessionStorage.setItem('isHost', JSON.stringify(gameData.isHost));
     }, [gameData]);
 
-    const updateGameData = (newData) => {
+    const updateGameData = React.useCallback((newData) => {
         setGameData(prev => ({ ...prev, ...newData }));
-    };
+    }, []);
 
-    const clearGameData = () => {
+    const clearGameData = React.useCallback(() => {
         setGameData({ username: '', roomId: '', isHost: false });
         sessionStorage.clear();
-    };
+    }, []);
+
+    const value = React.useMemo(() => ({ 
+        gameData, 
+        updateGameData, 
+        clearGameData 
+    }), [gameData, updateGameData, clearGameData]);
 
     return (
-        <GameContext.Provider value={{ gameData, updateGameData, clearGameData }}>
+        <GameContext.Provider value={value}>
             {children}
         </GameContext.Provider>
     );
 };
+
 
 export const useGame = () => {
     const context = useContext(GameContext);

@@ -14,11 +14,15 @@ export const connectSocket = (onConnect) => {
 };
 
 export const sendMessage = (destination, message) => {
-    stompClient.send(destination, {}, JSON.stringify(message));
+    if (stompClient && stompClient.connected) {
+        stompClient.send(destination, {}, JSON.stringify(message));
+    }
 };
 
 export const subscribe = (topic, callback) => {
-    stompClient.subscribe(topic, (msg) => {
-        callback(JSON.parse(msg.body));
-    });
-};
+    if (stompClient && stompClient.connected) {
+        return stompClient.subscribe(topic, (msg) => {
+            callback(JSON.parse(msg.body));
+        });
+    }
+};
