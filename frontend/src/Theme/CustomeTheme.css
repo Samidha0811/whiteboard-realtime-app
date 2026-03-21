@@ -1,0 +1,13 @@
+:root.custom {
+    --bg-primary: #fdf2f8;
+    --bg-secondary: #fce7f3;
+    --text-primary: #831843;
+    --text-secondary: #9d174d;
+    --accent-primary: #db2777;
+    --accent-hover: #be185d;
+    --border-color: #f9a8d4;
+    --card-bg: #ffffff;
+    --input-bg: #fdf2f8;
+    --button-text: #ffffff;
+    --shadow: 0 4px 6px -1px rgba(219, 39, 119, 0.2), 0 2px 4px -1px rgba(219, 39, 119, 0.1);
+}
