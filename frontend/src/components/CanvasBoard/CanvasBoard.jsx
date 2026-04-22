@@ -85,8 +85,9 @@ const CanvasBoard = ({ roomId }) => {
     // 👂 Subscribe to real-time drawing, history, and clear events
     useEffect(() => {
         if (roomId) {
+            const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
             // Fetch existing drawing history via REST (reliable on refresh)
-            fetch(`http://localhost:8080/api/history/${roomId}`)
+            fetch(`${BACKEND_URL}/api/history/${roomId}`)
                 .then(res => res.json())
                 .then(historyData => {
                     if (Array.isArray(historyData) && historyData.length > 0) {
