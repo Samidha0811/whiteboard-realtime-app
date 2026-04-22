@@ -1,10 +1,10 @@
 .left-bar {
     grid-area: left;
-    background-color: var(--bg-secondary);
+    background: var(--bg-secondary);
     border-right: 1px solid var(--border-color);
     padding: 1rem;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.4s ease;
 }

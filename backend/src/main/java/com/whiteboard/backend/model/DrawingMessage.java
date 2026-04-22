@@ -8,10 +8,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DrawingMessage {
-    private int x;
-    private int y;
+    private double x;
+    private double y;
     private String type; // 'start', 'draw'
     private String roomId;
+    private String color;
+    private int size;
+    private String tool; // 'pen', 'eraser'
 }
-
-

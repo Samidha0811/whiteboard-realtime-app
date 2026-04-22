@@ -1,13 +1,45 @@
 :root.dark {
-    --bg-primary: #1a202c;
-    --bg-secondary: #2d3748;
-    --text-primary: #f7fafc;
-    --text-secondary: #cbd5e0;
-    --accent-primary: #63b3ed;
-    --accent-hover: #4299e1;
-    --border-color: #4a5568;
-    --card-bg: #2d3748;
-    --input-bg: #1a202c;
-    --button-text: #ffffff;
-    --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+    /* ── Backgrounds ── */
+    --bg-primary: #0f1221;
+    --bg-secondary: #171b2e;
+    --bg-tertiary: #1e2340;
+
+    /* ── Text ── */
+    --text-primary: #e8eaf6;
+    --text-secondary: #9ba2c7;
+    --text-muted: #6b7194;
+
+    /* ── Accent — Cyan / Electric ── */
+    --accent-primary: #22d3ee;
+    --accent-hover: #06b6d4;
+    --accent-secondary: #a78bfa;
+    --accent-bg: rgba(34, 211, 238, 0.12);
+    --accent-glow: rgba(34, 211, 238, 0.3);
+
+    /* ── Gradient ── */
+    --gradient-primary: linear-gradient(135deg, #22d3ee, #a78bfa);
+    --gradient-hero: linear-gradient(135deg, #0f1221 0%, #0c1a2e 50%, #150f2e 100%);
+    --gradient-card: linear-gradient(145deg, rgba(23,27,46,0.95), rgba(30,35,64,0.8));
+
+    /* ── Surfaces ── */
+    --border-color: rgba(34, 211, 238, 0.12);
+    --card-bg: rgba(23, 27, 46, 0.9);
+    --surface-glass: rgba(23, 27, 46, 0.5);
+    --input-bg: rgba(15, 18, 33, 0.8);
+    --button-text: #0f1221;
+
+    /* ── Shadows ── */
+    --shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.4), 0 2px 8px -2px rgba(34, 211, 238, 0.06);
+    --shadow-lg: 0 20px 60px -12px rgba(0, 0, 0, 0.5), 0 8px 24px -8px rgba(34, 211, 238, 0.08);
+    --shadow-glow: 0 0 40px rgba(34, 211, 238, 0.15);
+
+    /* ── Status ── */
+    --color-success: #34d399;
+    --color-danger: #f87171;
+    --color-warning: #fbbf24;
+
+    /* ── Canvas ── */
+    --canvas-bg: #1a1e35;
+    --toolbar-bg: rgba(15, 18, 33, 0.8);
+    --toolbar-border: rgba(34, 211, 238, 0.12);
 }

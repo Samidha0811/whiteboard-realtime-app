@@ -7,8 +7,15 @@ import com.whiteboard.backend.service.RoomService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 @Controller
+@CrossOrigin(origins = "*")
 public class GameController {
 
     private final RoomService roomService;
@@ -40,15 +47,37 @@ public class GameController {
                 joinMessage);
     }
 
-    // 🎨 DRAWING
+    // 🎨 DRAWING (WebSocket)
     @MessageMapping("/draw")
     public void draw(DrawingMessage message) {
+        // Store drawing in history
+        roomService.addDrawing(message.getRoomId(), message);
+
+        // Broadcast to all clients in the room
         messagingTemplate.convertAndSend(
                 "/topic/draw/" + message.getRoomId(),
                 message);
     }
 
-    // 💬 CHAT
+    // 🗑️ CLEAR CANVAS (WebSocket)
+    @MessageMapping("/clear")
+    public void clearCanvas(DrawingMessage message) {
+        roomService.clearDrawingHistory(message.getRoomId());
+
+        // Broadcast clear event to all clients
+        messagingTemplate.convertAndSend(
+                "/topic/clear/" + message.getRoomId(),
+                "clear");
+    }
+
+    // 📜 GET DRAWING HISTORY (REST - used on page refresh)
+    @GetMapping("/api/history/{roomId}")
+    @ResponseBody
+    public List<DrawingMessage> getDrawingHistory(@PathVariable String roomId) {
+        return roomService.getDrawingHistory(roomId);
+    }
+
+    // 💬 CHAT (WebSocket)
     @MessageMapping("/chat")
     public void chat(ChatMessage message) {
         messagingTemplate.convertAndSend(

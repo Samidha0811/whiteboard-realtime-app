@@ -1,5 +1,6 @@
 package com.whiteboard.backend.service;
 
+import com.whiteboard.backend.model.DrawingMessage;
 import com.whiteboard.backend.model.GameRoom;
 import com.whiteboard.backend.model.Player;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,23 @@ public class RoomService {
     public List<Player> getPlayers(String roomId) {
         GameRoom room = rooms.get(roomId);
         return room != null ? room.getPlayers() : new ArrayList<>();
+    }
+
+    public void addDrawing(String roomId, DrawingMessage message) {
+        GameRoom room = getOrCreateRoom(roomId);
+        room.getDrawingHistory().add(message);
+    }
+
+    public List<DrawingMessage> getDrawingHistory(String roomId) {
+        GameRoom room = rooms.get(roomId);
+        return room != null ? room.getDrawingHistory() : new ArrayList<>();
+    }
+
+    public void clearDrawingHistory(String roomId) {
+        GameRoom room = rooms.get(roomId);
+        if (room != null) {
+            room.getDrawingHistory().clear();
+        }
     }
 
     public void updateScore(String roomId, String username) {

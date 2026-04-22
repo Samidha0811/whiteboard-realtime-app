@@ -10,6 +10,7 @@ import java.util.Map;
 public class GameRoom {
     private List<Player> players = new ArrayList<>();
     private Map<String, Integer> scores = new HashMap<>();
+    private List<DrawingMessage> drawingHistory = new ArrayList<>();
     private String currentWord;
     private int currentTurnIndex = 0;
 }

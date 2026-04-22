@@ -5,16 +5,62 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: var(--bg-primary);
+    background: var(--gradient-hero);
     color: var(--text-primary);
     margin: 0;
-    padding: 0;
+    padding: 2rem;
     box-sizing: border-box;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* ── Floating Decorative Orbs ── */
+.home-screen-container::before,
+.home-screen-container::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.home-screen-container::before {
+    width: 400px;
+    height: 400px;
+    background: var(--accent-primary);
+    top: -10%;
+    right: -5%;
+    animation: float-slow 8s ease-in-out infinite;
+}
+
+.home-screen-container::after {
+    width: 300px;
+    height: 300px;
+    background: var(--accent-secondary);
+    bottom: -8%;
+    left: -3%;
+    animation: float-slow 10s ease-in-out infinite 2s;
+}
+
+/* Ensure content stays above orbs */
+.home-screen-container > * {
+    position: relative;
+    z-index: 1;
 }
 
 @media (max-width: 768px) {
     .home-screen-container {
-        padding: 1rem;
+        padding: 1.5rem;
+    }
+    .home-screen-container::before {
+        width: 250px;
+        height: 250px;
+    }
+    .home-screen-container::after {
+        width: 180px;
+        height: 180px;
     }
 }
