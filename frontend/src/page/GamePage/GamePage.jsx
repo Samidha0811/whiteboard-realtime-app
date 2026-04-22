@@ -2,8 +2,10 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useGame } from '../../context/GameContext';
 import { connectSocket, sendMessage, subscribe } from '../../services/socket';
+import { useWebRTC } from '../../hooks/useWebRTC';
 import GameLayout from '../../components/Layout/GameLayout/GameLayout';
 import CanvasBoard from '../../components/CanvasBoard/CanvasBoard';
+import VideoPanel from '../../components/VideoPanel/VideoPanel';
 import './GamePage.css';
 
 const AVATAR_COLORS = [
@@ -30,6 +32,16 @@ const GamePage = () => {
     const [connectionStatus, setConnectionStatus] = useState('connecting');
     const [chatInput, setChatInput] = useState('');
     const chatEndRef = useRef(null);
+
+    // Live Video/Audio Hook
+    const { 
+        localStream, 
+        remoteStreams, 
+        toggleVideo, 
+        toggleAudio,
+        isMuted,
+        isCameraOff
+    } = useWebRTC(gameData.roomId, gameData.username, players);
 
     useEffect(() => {
         // Use location.state if available (fresh navigation), otherwise fall back
@@ -92,6 +104,17 @@ const GamePage = () => {
 
     return (
         <GameLayout
+            video={
+                <VideoPanel 
+                    localStream={localStream}
+                    remoteStreams={remoteStreams}
+                    currentUsername={gameData.username}
+                    toggleVideo={toggleVideo}
+                    toggleAudio={toggleAudio}
+                    isMuted={isMuted}
+                    isCameraOff={isCameraOff}
+                />
+            }
             left={
                 <div className="sidebar-content" id="game-left-sidebar">
                     {/* User Profile */}

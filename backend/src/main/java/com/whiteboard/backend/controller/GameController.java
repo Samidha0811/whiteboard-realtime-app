@@ -59,6 +59,30 @@ public class GameController {
                 message);
     }
 
+    // 📞 WEBRTC SIGNALING
+    @MessageMapping("/signal/offer")
+    public void handleOffer(com.whiteboard.backend.model.SignalMessage signal) {
+        // Forward offer to every other client or a specific target if implemented
+        // For simplicity in a small classroom, broadcast signal to others
+        messagingTemplate.convertAndSend(
+                "/topic/signal/" + signal.getRoomId(),
+                signal);
+    }
+
+    @MessageMapping("/signal/answer")
+    public void handleAnswer(com.whiteboard.backend.model.SignalMessage signal) {
+        messagingTemplate.convertAndSend(
+                "/topic/signal/" + signal.getRoomId(),
+                signal);
+    }
+
+    @MessageMapping("/signal/ice")
+    public void handleIce(com.whiteboard.backend.model.SignalMessage signal) {
+        messagingTemplate.convertAndSend(
+                "/topic/signal/" + signal.getRoomId(),
+                signal);
+    }
+
     // 🗑️ CLEAR CANVAS (WebSocket)
     @MessageMapping("/clear")
     public void clearCanvas(DrawingMessage message) {

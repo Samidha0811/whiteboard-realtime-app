@@ -116,16 +116,27 @@ const CanvasBoard = ({ roomId }) => {
         }
     }, [roomId, drawStroke, replayHistory]);
 
-    const saveState = () => {
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext("2d");
-        setHistory(prev => [...prev.slice(-20), ctx.getImageData(0, 0, canvas.width, canvas.height)]);
+    const getCoordinates = (e) => {
+        const rect = canvasRef.current.getBoundingClientRect();
+        
+        if (e.nativeEvent.touches && e.nativeEvent.touches.length > 0) {
+            return {
+                x: e.nativeEvent.touches[0].clientX - rect.left,
+                y: e.nativeEvent.touches[0].clientY - rect.top
+            };
+        }
+        
+        // For mouse events, use clientX/Y - rect to be consistent and avoid offsetX issues in nested flex layouts
+        return {
+            x: e.nativeEvent.clientX - rect.left,
+            y: e.nativeEvent.clientY - rect.top
+        };
     };
 
     const startDrawing = (e) => {
+        if (e.type === 'touchstart') e.preventDefault();
         saveState();
-        const x = e.nativeEvent.offsetX;
-        const y = e.nativeEvent.offsetY;
+        const { x, y } = getCoordinates(e);
 
         // Draw locally
         drawStroke({ x, y, type: 'start', color, size, tool });
@@ -141,8 +152,8 @@ const CanvasBoard = ({ roomId }) => {
 
     const draw = (e) => {
         if (!isDrawing) return;
-        const x = e.nativeEvent.offsetX;
-        const y = e.nativeEvent.offsetY;
+        if (e.type === 'touchmove') e.preventDefault();
+        const { x, y } = getCoordinates(e);
 
         // Draw locally
         drawStroke({ x, y, type: 'draw', color, size, tool });
@@ -262,7 +273,7 @@ const CanvasBoard = ({ roomId }) => {
                 <div className="tool-group action-buttons">
                     <button onClick={undoLast} className="tool-btn" title="Undo" disabled={history.length === 0} id="tool-undo">
                         <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                            <path d="M4 7l3-3M4 7l3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M4 7l3-3M4 7l3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                             <path d="M4 7h8a4 4 0 010 8H9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                         </svg>
                     </button>
@@ -286,6 +297,9 @@ const CanvasBoard = ({ roomId }) => {
                 onMouseUp={stopDrawing}
                 onMouseOut={stopDrawing}
                 onMouseMove={draw}
+                onTouchStart={startDrawing}
+                onTouchMove={draw}
+                onTouchEnd={stopDrawing}
                 className="whiteboard-canvas"
                 id="whiteboard-canvas"
             />
