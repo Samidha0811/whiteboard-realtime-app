@@ -1,12 +1,17 @@
 # React (frontend)
 node_modules/
 build/
-.env
+dist/
+.env*
 
 # Java (backend)
 target/
 *.log
 *.class
+
+# Unused / Temp files
+*.txt
+*.txt.*
 
 # IDE / OS
 .vscode/
