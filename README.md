@@ -3,45 +3,49 @@
 A multiplayer drawing and guessing game like Skribbl.io.
 
 ## 🚀 Features
-- Real-time drawing (WebSockets)
-- Multiplayer rooms
-- Chat & guessing system
-- Turn-based gameplay
+- **Real-time Drawing**: Seamless synchronization using WebSockets.
+- **Multiplayer Rooms**: Create or join rooms with unique codes.
+- **Interactive Chat**: Built-in chat system for communication.
+- **Dual Mode Support**: Beautifully crafted Light and Dark modes.
 
-## 🖼️ Project Preview
+## 🖼️ Project Gallery
 
-### Hero Preview
-![Hero](docs/images/hero.png)
+### 🏠 Landing & Authentication
+| Landing Page (Light) | Landing Page (Dark) | Login Page |
+| :---: | :---: | :---: |
+| ![Landing Light](docs/images/landing_page.png) | ![Landing Dark](docs/images/landing_dark.png) | ![Login](docs/images/login_page.png) |
 
-### Landing Page
-![Landing Page](docs/images/landing_page.png)
+### 🔑 Room Management
+| Ready to Draw | Create Room | Join Room |
+| :---: | :---: | :---: |
+| ![Ready](docs/images/readytodraw.png) | ![Create](docs/images/creteroom.png) | ![Join](docs/images/joinrooom.png) |
 
-### Whiteboard Interface
-![Whiteboard UI](docs/images/whiteboard_ui.png)
-
-### Real-Time Drawing Flow
-![Whiteboard Flow](docs/images/whiteboard_flow.png)
+### 🎨 Whiteboard Experience
+| Main Interface | Real-Time Drawing | Dark Mode Whiteboard |
+| :---: | :---: | :---: |
+| ![Main UI](docs/images/whiteboard_ui.png) | ![Drawing Flow](docs/images/whiteboard_flow.png) | ![Dark Mode UI](docs/images/whiteboard_dark.png) |
 
 ## 🔄 Working Flow
 
-1.  **Join/Create Room**: Users can enter their display name and either create a new room or join an existing one using a unique Room Code.
-2.  **Real-Time Collaboration**: Once in the room, the host and participants can draw on the whiteboard simultaneously.
-3.  **Drawing Tools**: Users have access to various colors and stroke sizes to express their ideas.
-4.  **Live Interaction**: The app supports real-time synchronization, so every stroke made by one user is instantly visible to all other participants in the room.
-5.  **Chat & Status**: Users can see who is online and communicate through the integrated chat system.
+1.  **Authentication**: Users start at the landing page and can proceed to login.
+2.  **Room Selection**: Choose between creating a new room or joining an existing one.
+3.  **Room Setup**:
+    - **Create**: Get a unique Room Code to share with friends.
+    - **Join**: Enter the Room Code shared by the host.
+4.  **Collaboration**: Once inside, draw on the canvas in real-time, change colors, adjust brush size, and chat with other players.
 
 ## 🛠️ Tech Stack
-- Frontend: React.js
-- Backend: Spring Boot
-- WebSocket for real-time communication
+- **Frontend**: React.js
+- **Backend**: Spring Boot
+- **Communication**: WebSockets (STOMP/SockJS)
 
 ## ▶️ How to Run the code
 
 ### Backend
-cd backend
-mvn spring-boot:run
+1. Navigate to the backend folder: `cd backend`
+2. Run the application: `mvn spring-boot:run`
 
 ### Frontend
-cd frontend
-npm install
-npm run dev
+1. Navigate to the frontend folder: `cd frontend`
+2. Install dependencies: `npm install`
+3. Start the dev server: `npm run dev`
